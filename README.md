@@ -26,7 +26,7 @@ python3 main.py --interactive
 Or, if you have [Kevin Package-Manager](https://github.com/kevinveenbirkenbach/package-manager) installed, install **Git Configurator** with:
 
 ```bash
-pkgmgr install --all
+pkgmgr install git-configurator
 ```
 
 Then, use it globally via:
