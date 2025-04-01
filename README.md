@@ -51,6 +51,41 @@ gitconfig --help
   gitconfig --merge-option rebase --name "John Doe" --email "john@example.com" --website "https://johndoe.com" --signing gpg --gpg-key YOUR_GPG_KEY
   ```
 
+### 🔑 Using Your GPG Key with Git Configurator
+
+To sign your Git commits with a GPG key, you must first identify your key ID. Follow these steps to find your GPG key ID:
+
+**1. List your available GPG keys:**
+
+```bash
+gpg --list-secret-keys --keyid-format LONG
+```
+
+You will see output similar to:
+
+```
+/home/youruser/.gnupg/pubring.kbx
+--------------------------------------------
+sec   rsa4096/A1B2C3D4E5F6G7H8 2020-12-29 [SC]
+      1234ABCD5678EFGH9012IJKL3456MNOP7890QRST
+uid                 [ultimate] John Doe <john@example.com>
+ssb   rsa4096/Z9Y8X7W6V5U4T3S2 2020-12-29 [E]
+```
+
+The GPG key ID you need for Git configuration is the short form displayed after `rsa4096/`, in this example:
+
+```
+A1B2C3D4E5F6G7H8
+```
+
+**2. Configure your GPG key with Git Configurator:**
+
+```bash
+gitconfig --signing gpg --gpg-key R5T6Y7U8I9O0P1Q2
+```
+
+Replace `R5T6Y7U8I9O0P1Q2` with your actual key ID from the output above.
+
 ## License 📄
 
 This project is licensed under the MIT License.
