@@ -48,10 +48,6 @@ help:
 	@echo "  - This Makefile is venv-first to avoid PATH/Nix python issues."
 	@echo "  - Override venv path via: make VENV=/tmp/gitcon-venv install"
 
-install: $(PYTHON)
-	@echo "[make] Installing in editable mode..."
-	@"$(PIP)" install -e .
-
 test: $(PYTHON)
 	@echo "[make] Running unit tests..."
 	@"$(UNITTEST)" discover -s "$(TEST_DIR)" -p 'test_*.py'
