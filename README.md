@@ -1,103 +1,151 @@
-# Git Configurator ⚙️✨
+# GitCon ⚙️✨
+*A simple, interactive way to configure your global Git setup*
 [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-GitHub%20Sponsors-blue?logo=github)](https://github.com/sponsors/kevinveenbirkenbach) [![Patreon](https://img.shields.io/badge/Support-Patreon-orange?logo=patreon)](https://www.patreon.com/c/kevinveenbirkenbach) [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20me%20a%20Coffee-Funding-yellow?logo=buymeacoffee)](https://buymeacoffee.com/kevinveenbirkenbach) [![PayPal](https://img.shields.io/badge/Donate-PayPal-blue?logo=paypal)](https://s.veen.world/paypaldonate)
+[![PyPI](https://img.shields.io/pypi/v/gitcon.svg)](https://pypi.org/project/gitcon/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/gitcon.svg)](https://pypi.org/project/gitcon/)
+[![License](https://img.shields.io/pypi/l/gitcon.svg)](https://pypi.org/project/gitcon/)
+[![Tests](https://github.com/kevinveenbirkenbach/git-configurator/actions/workflows/tests.yml/badge.svg)](https://github.com/kevinveenbirkenbach/git-configurator/actions)
 
+---
 
-**Git Configurator** is a Python-based utility that simplifies setting up your global Git configuration. It interactively guides you through selecting merge strategies, setting author details (including website), and choosing your commit signing preferences. Alternatively, you can configure everything via command-line arguments for automated setup.
+## Overview
 
-## Features 🚀
+**GitCon** is a small command-line tool that helps you **set up your global Git configuration quickly and consistently**.
 
-- **Interactive Setup:**  
-  Follow step-by-step prompts to configure merge options, author name/email, website, and GPG signing settings.
-- **Non-Interactive Mode:**  
-  Use command-line arguments for quick, automated configuration.
-- **Global Git Configuration:**  
-  Easily set up your Git environment with a single command.
-- **Integration with Kevin's Package-Manager:**  
-  Installable via [Kevin's Package-Manager](https://github.com/kevinveenbirkenbach/package-manager) under the alias `gitconfig` for global access.
+Instead of remembering dozens of Git commands, GitCon guides you through the most important settings or lets you configure everything in one command. It is especially useful when setting up a **new machine**, a **fresh user account**, or when you want to **standardize your Git configuration**.
+
+---
+
+## What you can do with GitCon
+
+* Configure global Git settings in minutes
+* Choose how `git pull` and merges behave
+* Set your name, email, and optional website
+* Enable or disable GPG signing for commits
+* Automatically sign Git tags
+* Run interactively or fully automated in scripts
+
+---
 
 ## Installation 📦
 
-You can run the script directly:
+Install GitCon using **pip**:
 
 ```bash
-python3 main.py --interactive
+pip install gitcon
 ```
 
-Or, if you have [Kevin Package-Manager](https://github.com/kevinveenbirkenbach/package-manager) installed, install **Git Configurator** with:
+After installation, the `gitcon` command is available globally:
 
 ```bash
-pkgmgr install git-configurator
+gitcon --help
 ```
 
-Then, use it globally via:
-
-```bash
-gitconfig --help
-```
+---
 
 ## Usage 💻
 
-- **Interactive Mode:**
+### Interactive setup (recommended)
 
-  ```bash
-  gitconfig --interactive
-  ```
+Run GitCon in interactive mode to be guided step by step:
 
-  Follow the on-screen prompts to set your Git configuration.
+```bash
+gitcon --interactive
+```
 
-- **Non-Interactive Mode:**
+You will be asked about:
 
-  ```bash
-  gitconfig --merge-option rebase --name "John Doe" --email "john@example.com" --website "https://johndoe.com" --signing gpg --gpg-key YOUR_GPG_KEY
-  ```
+* Merge and pull behavior
+* Your Git user name and email
+* Optional website
+* Commit signing preferences
+* GPG key selection
+* Automatic tag signing
 
-### 🔑 Using Your GPG Key with Git Configurator
+This is ideal for first-time setup.
 
-To sign your Git commits with a GPG key, you must first identify your key ID. Follow these steps to find your GPG key ID:
+---
 
-**1. List your available GPG keys:**
+### Non-interactive (scripted) usage
+
+You can also configure everything directly using command-line arguments:
+
+```bash
+gitcon \
+  --merge-option rebase \
+  --name "John Doe" \
+  --email "john@example.com" \
+  --website "https://johndoe.com" \
+  --signing gpg \
+  --gpg-key ABCDEF123456 \
+  --tag-signing auto
+```
+
+This mode is useful for:
+
+* Automation scripts
+* CI environments
+* Reproducible workstation setups
+
+---
+
+## Commit & Tag Signing with GPG 🔐
+
+GitCon can configure Git to **sign commits and tags using GPG**.
+
+### 1. Find your GPG key ID
+
+List your secret keys:
 
 ```bash
 gpg --list-secret-keys --keyid-format LONG
 ```
 
-You will see output similar to:
+Example output:
 
 ```
-/home/youruser/.gnupg/pubring.kbx
---------------------------------------------
-sec   rsa4096/A1B2C3D4E5F6G7H8 2020-12-29 [SC]
-      1234ABCD5678EFGH9012IJKL3456MNOP7890QRST
-uid                 [ultimate] John Doe <john@example.com>
-ssb   rsa4096/Z9Y8X7W6V5U4T3S2 2020-12-29 [E]
+sec   rsa4096/DEADBEEF12345678 2020-01-01 [SC]
+uid                 John Doe <john@example.com>
 ```
 
-The GPG key ID you need for Git configuration is the short form displayed after `rsa4096/`, in this example:
+The key ID is the part after `rsa4096/`, for example:
 
 ```
-A1B2C3D4E5F6G7H8
+DEADBEEF12345678
 ```
 
-**2. Configure your GPG key with Git Configurator:**
+---
+
+### 2. Configure Git signing with GitCon
 
 ```bash
-gitconfig --signing gpg --gpg-key R5T6Y7U8I9O0P1Q2
+gitcon --signing gpg --gpg-key DEADBEEF12345678 --tag-signing auto
 ```
 
-Replace `R5T6Y7U8I9O0P1Q2` with your actual key ID from the output above.
+This will:
+
+* Enable commit signing
+* Set your signing key
+* Automatically sign Git tags
+
+---
+
+## Typical use cases
+
+* Setting up Git on a new laptop or server
+* Ensuring consistent Git configuration across multiple machines
+* Quickly enabling GPG signing without memorizing Git commands
+* Automating Git setup in provisioning scripts
+
+---
 
 ## License 📄
 
-This project is licensed under the MIT License.
+MIT License
+
+---
 
 ## Author 👤
 
-**Kevin Veen-Birkenbach**  
-[veen.world](https://www.veen.world/)
-
-## Acknowledgements 🤖💡
-
-This script was created with the help of **ChatGPT**.
-
----
-Happy configuring! 🎉
+**Kevin Veen-Birkenbach**
+[https://www.veen.world](https://www.veen.world)
